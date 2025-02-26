@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agricultural Advisor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.2/marked.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #45a049;
+            --accent-color: #2196F3;
+            --background-color: #f0f4f0;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .form-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 300px;
+            margin: 20px auto;
+            display: block;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .recommendation-section {
+            display: none;
+            margin-top: 40px;
+            padding: 30px;
+            background: #f9f9f9;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .markdown-content {
+            line-height: 1.8;
+            font-size: 1.1em;
+        }
+
+        .creator-info {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+        }
+
+        .creator-name {
+            background: linear-gradient(120deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Agricultural Advisor</h1>
+            <p>Get personalized crop and agrochemical recommendations for your farm</p>
+        </div>
+
+        <form id="farmForm">
+            <div class="form-section">
+                <div>
+                    <div class="input-group">
+                        <label for="landSize">Land Size (in acres)</label>
+                        <input type="number" id="landSize" required min="0" step="0.1">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="soilType">Soil Type</label>
+                        <select id="soilType" required>
+                            <option value="">Select soil type</option>
+                            <option value="clay">Clay Soil</option>
+                            <option value="sandy">Sandy Soil</option>
+                            <option value="loamy">Loamy Soil</option>
+                            <option value="silt">Silty Soil</option>
+                            <option value="peaty">Peaty Soil</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="irrigation">Irrigation Method</label>
+                        <select id="irrigation" required>
+                            <option value="">Select irrigation method</option>
+                            <option value="drip">Drip Irrigation</option>
+                            <option value="sprinkler">Sprinkler System</option>
+                            <option value="flood">Flood Irrigation</option>
+                            <option value="furrow">Furrow Irrigation</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="input-group">
+                        <label for="location">Location (Region/State)</label>
+                        <input type="text" id="location" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="cropType">Desired Crop Type</label>
+                        <select id="cropType" required>
+                            <option value="">Select crop type</option>
+                            <option value="cereals">Cereals</option>
+                            <option value="pulses">Pulses</option>
+                            <option value="vegetables">Vegetables</option>
+                            <option value="fruits">Fruits</option>
+                            <option value="oilseeds">Oilseeds</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="additional">Additional Information</label>
+                        <textarea id="additional" rows="3" placeholder="Any specific requirements or concerns?"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit">Get Recommendations</button>
+        </form>
+
+        <div class="loading" id="loading">
+            Analyzing your farm details...
+        </div>
+
+        <div class="recommendation-section" id="recommendationSection">
+            <h2>Your Personalized Recommendations</h2>
+            <div id="recommendations" class="markdown-content"></div>
+        </div>
+
+        <div class="creator-info">
+            Created by <span class="creator-name">Aryan Jain</span>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('farmForm');
+        const loading = document.getElementById('loading');
+        const recommendationSection = document.getElementById('recommendationSection');
+        const recommendations = document.getElementById('recommendations');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                landSize: document.getElementById('landSize').value,
+                soilType: document.getElementById('soilType').value,
+                irrigation: document.getElementById('irrigation').value,
+                location: document.getElementById('location').value,
+                cropType: document.getElementById('cropType').value,
+                additional: document.getElementById('additional').value
+            };
+
+            loading.style.display = 'block';
+            recommendationSection.style.display = 'none';
+
+            try {
+                const response = await fetch('http://localhost:5000/get-recommendations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+                recommendations.innerHTML = marked.parse(data.recommendations);
+                recommendationSection.style.display = 'block';
+            } catch (error) {
+                recommendations.innerHTML = marked.parse('**Error:** Unable to get recommendations. Please try again.');
+                recommendationSection.style.display = 'block';
+            } finally {
+                loading.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
